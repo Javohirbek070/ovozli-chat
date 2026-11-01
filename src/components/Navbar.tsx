@@ -1,120 +1,125 @@
 import React, { useState } from 'react';
-import { Waves, Share2, Check, Radio, Menu } from 'lucide-react';
-import type { Room } from '../types';
+import { Waves, Share2, Check, Radio, Users, User, Sparkles } from 'lucide-react';
+import type { User as UserType } from '../types';
 
 interface NavbarProps {
-  currentRoom: Room;
+  currentUser: UserType;
   onlineCount: number;
   isCallActive: boolean;
-  onToggleSidebar: () => void;
   onToggleCall: () => void;
+  onOpenProfile: () => void;
+  onOpenParticipants: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  currentRoom,
+  currentUser,
   onlineCount,
   isCallActive,
-  onToggleSidebar,
   onToggleCall,
+  onOpenProfile,
+  onOpenParticipants,
 }) => {
   const [copied, setCopied] = useState(false);
 
   const handleShare = () => {
     const url = new URL(window.location.href);
-    url.searchParams.set('room', currentRoom.id);
     navigator.clipboard.writeText(url.toString());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <header className="w-full bg-slate-950/80 border-b border-white/10 px-4 py-3 backdrop-blur-xl sticky top-0 z-40 flex items-center justify-between">
-      {/* Left: Mobile Menu Toggle & Brand */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={onToggleSidebar}
-          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 md:hidden text-slate-300"
-          title="Menyu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-400 p-0.5 shadow-lg shadow-violet-600/30 flex items-center justify-center">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <Waves className="w-5 h-5 text-cyan-400" />
+    <header className="w-full sticky top-0 z-40 px-3 sm:px-6 py-3.5">
+      <div className="max-w-4xl mx-auto liquid-glass rounded-2xl sm:rounded-3xl px-4 py-2.5 flex items-center justify-between transition-all">
+        {/* Brand & Room Info */}
+        <div className="flex items-center gap-3">
+          <div className="relative group">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-violet-500 via-indigo-500 to-cyan-400 p-[1.5px] shadow-lg shadow-violet-500/25 flex items-center justify-center">
+              <div className="w-full h-full bg-[#0a0d18]/85 backdrop-blur-md rounded-[14px] flex items-center justify-center">
+                <Waves className="w-5 h-5 text-cyan-300 transition-transform group-hover:scale-110" />
+              </div>
             </div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#090b10] animate-pulse" />
           </div>
+
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
-                VoxWave
-              </span>
-              <span className="text-[10px] uppercase font-bold px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                Ovozli
-              </span>
+            <div className="flex items-center gap-2">
+              <h1 className="font-extrabold text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+                <span>VoxWave</span>
+                <span className="text-[11px] font-medium text-slate-400 hidden sm:inline">•</span>
+                <span className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-violet-300 to-cyan-300 bg-clip-text text-transparent">
+                  Umumiy Suhbat
+                </span>
+              </h1>
             </div>
-            <p className="text-[11px] text-slate-400 hidden sm:block">
-              {currentRoom.name} — {currentRoom.description}
+            <p className="text-[11px] text-slate-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+              <span>Ochiq ovozli muloqot xonasi</span>
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Right: Actions */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Live Call Toggle pill */}
-        <button
-          onClick={onToggleCall}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all shadow-md ${
-            isCallActive
-              ? 'bg-emerald-500 text-slate-950 shadow-emerald-500/30 animate-pulse'
-              : 'bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/30'
-          }`}
-        >
-          <Radio className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">
-            {isCallActive ? "Jonli Efirda" : "Jonli Ovoz"}
-          </span>
-        </button>
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Live Call Toggle Pill */}
+          <button
+            onClick={onToggleCall}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl sm:rounded-2xl text-xs font-semibold transition-all ${
+              isCallActive
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/30 scale-105'
+                : 'liquid-glass-pill text-violet-300 hover:text-white'
+            }`}
+          >
+            <Radio className={`w-3.5 h-3.5 ${isCallActive ? 'animate-pulse' : 'text-violet-400'}`} />
+            <span className="hidden sm:inline">
+              {isCallActive ? "Jonli Efirda" : "Jonli Ovoz"}
+            </span>
+          </button>
 
-        {/* Share Room Button */}
-        <button
-          onClick={handleShare}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 transition-colors"
-          title="Do'stlarga havola yuborish"
-        >
-          {copied ? (
-            <>
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-emerald-400 font-semibold">Nusxalandi!</span>
-            </>
-          ) : (
-            <>
-              <Share2 className="w-3.5 h-3.5 text-slate-400" />
-              <span className="hidden md:inline">Ulashish</span>
-            </>
-          )}
-        </button>
+          {/* Participants Counter Pill */}
+          <button
+            onClick={onOpenParticipants}
+            className="liquid-glass-pill flex items-center gap-1.5 px-3 py-1.5 rounded-xl sm:rounded-2xl text-xs text-slate-300 hover:text-white transition-all"
+            title="Suhbatdoshlarni ko'rish"
+          >
+            <Users className="w-3.5 h-3.5 text-cyan-400" />
+            <span className="font-semibold">{onlineCount}</span>
+          </button>
 
-        {/* Online Indicator */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-white/5 text-xs text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>{onlineCount} onlayn</span>
+          {/* Share Link Pill */}
+          <button
+            onClick={handleShare}
+            className="liquid-glass-pill flex items-center gap-1.5 px-3 py-1.5 rounded-xl sm:rounded-2xl text-xs text-slate-300 hover:text-white transition-all"
+            title="Havolani nusxalash"
+          >
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-300 text-[11px] font-bold hidden sm:inline">Nusxalandi!</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-3.5 h-3.5 text-slate-400" />
+                <span className="hidden md:inline text-[11px]">Ulashish</span>
+              </>
+            )}
+          </button>
+
+          {/* User Profile Pill */}
+          <button
+            onClick={onOpenProfile}
+            className="relative p-0.5 rounded-xl sm:rounded-2xl border border-white/20 transition-transform hover:scale-105 active:scale-95"
+            style={{ backgroundColor: currentUser.avatarColor || '#8b5cf6' }}
+            title="Profil sozlamalari"
+          >
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[10px] sm:rounded-xl flex items-center justify-center font-bold text-white text-xs shadow-inner">
+              {currentUser.name ? currentUser.name[0].toUpperCase() : <User className="w-4 h-4" />}
+            </div>
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+              <Sparkles className="w-2.5 h-2.5 text-amber-300 animate-spin" />
+            </span>
+          </button>
         </div>
-
-        {/* GitHub link */}
-        <a
-          href="https://github.com/Javohirbek070/ovozli-chat"
-          target="_blank"
-          rel="noreferrer"
-          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-          title="GitHub Repo"
-        >
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-          </svg>
-        </a>
       </div>
     </header>
   );

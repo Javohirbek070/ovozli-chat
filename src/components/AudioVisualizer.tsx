@@ -25,20 +25,31 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyser, isRe
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const barWidth = (canvas.width / (bufferLength / 2)) * 1.5;
+      const usableBars = Math.floor(bufferLength / 2);
+      const barWidth = (canvas.width / usableBars) * 1.4;
       let x = 0;
 
-      for (let i = 0; i < bufferLength / 2; i++) {
-        const barHeight = (dataArray[i] / 255) * canvas.height * 0.9;
+      for (let i = 0; i < usableBars; i++) {
+        const barHeight = Math.max(3, (dataArray[i] / 255) * canvas.height * 0.9);
 
-        // Gradient for glowing cyber voice wave
+        // Fluid liquid gradient
         const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-        gradient.addColorStop(0, '#8b5cf6');
-        gradient.addColorStop(0.5, '#06b6d4');
-        gradient.addColorStop(1, '#ec4899');
+        gradient.addColorStop(0, '#06b6d4');
+        gradient.addColorStop(0.5, '#8b5cf6');
+        gradient.addColorStop(1, '#f43f5e');
 
         ctx.fillStyle = gradient;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+
+        // Draw rounded liquid pill bar
+        const width = Math.max(2, barWidth - 1.5);
+        const y = canvas.height - barHeight;
+        if (ctx.roundRect) {
+          ctx.beginPath();
+          ctx.roundRect(x, y, width, barHeight, 3);
+          ctx.fill();
+        } else {
+          ctx.fillRect(x, y, width, barHeight);
+        }
 
         x += barWidth;
       }
@@ -56,7 +67,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({ analyser, isRe
       ref={canvasRef}
       width={240}
       height={38}
-      className="rounded-lg bg-black/30 backdrop-blur-sm border border-white/5"
+      className="rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 shadow-inner"
     />
   );
 };

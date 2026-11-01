@@ -6,7 +6,13 @@ import { AudioVisualizer } from './AudioVisualizer';
 import { playSound } from '../utils/audioEffects';
 
 interface VoiceRecorderDockProps {
-  onSendVoice: (blob: Blob, duration: number, waveform: number[], transcription: string, filter: 'normal' | 'robot' | 'deep' | 'chipmunk') => void;
+  onSendVoice: (
+    blob: Blob,
+    duration: number,
+    waveform: number[],
+    transcription: string,
+    filter: 'normal' | 'robot' | 'deep' | 'chipmunk'
+  ) => void;
   disabled?: boolean;
 }
 
@@ -45,7 +51,7 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
       setRecordSeconds(0);
       setLiveTranscript('');
 
-      // Start live transcription
+      // Start live speech-to-text
       if (transcriberRef.current) {
         transcriberRef.current.setLanguage(selectedLang);
         transcriberRef.current.start((text) => {
@@ -114,9 +120,9 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
     <div className="w-full max-w-3xl mx-auto px-4 py-3 relative">
       {/* Voice filter & Language Selector Popover */}
       {showFilterMenu && (
-        <div className="absolute bottom-20 left-4 sm:left-auto right-4 sm:right-auto z-30 p-3 bg-slate-900/95 border border-white/15 rounded-2xl shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 flex flex-col gap-3 min-w-[260px]">
+        <div className="absolute bottom-20 left-4 sm:left-auto right-4 sm:right-auto z-30 p-3.5 liquid-glass rounded-3xl shadow-2xl backdrop-blur-3xl animate-in fade-in slide-in-from-bottom-3 flex flex-col gap-3 min-w-[270px] border border-white/20">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-1.5">
               <Wand2 className="w-3.5 h-3.5 text-violet-400" />
               <span>Ovoz Effektlari (Filtr)</span>
             </div>
@@ -128,10 +134,10 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
                     setSelectedFilter(opt.id);
                     setShowFilterMenu(false);
                   }}
-                  className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  className={`flex items-center gap-2 px-2.5 py-2 rounded-xl text-xs font-medium transition-all ${
                     selectedFilter === opt.id
-                      ? 'bg-violet-600 text-white font-semibold shadow-md shadow-violet-600/30'
-                      : 'bg-white/5 text-slate-300 hover:bg-white/10'
+                      ? 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-semibold shadow-md shadow-violet-600/30 ring-1 ring-white/30'
+                      : 'liquid-glass-pill text-slate-300 hover:text-white'
                   }`}
                 >
                   <opt.icon className="w-3.5 h-3.5" />
@@ -141,8 +147,8 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
             </div>
           </div>
 
-          <div className="pt-2 border-t border-white/10">
-            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
+          <div className="pt-2.5 border-t border-white/10">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-1.5">
               <Globe className="w-3.5 h-3.5 text-cyan-400" />
               <span>Nutqni aniqlash tili</span>
             </div>
@@ -160,10 +166,10 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
                       transcriberRef.current.setLanguage(lang.code as 'uz-UZ' | 'ru-RU' | 'en-US');
                     }
                   }}
-                  className={`flex-1 py-1 px-2 rounded-lg text-[11px] font-medium text-center transition-all ${
+                  className={`flex-1 py-1.5 px-2 rounded-xl text-[11px] font-medium text-center transition-all ${
                     selectedLang === lang.code
-                      ? 'bg-cyan-600 text-white font-bold'
-                      : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                      ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-bold shadow-md shadow-cyan-600/30 ring-1 ring-white/30'
+                      : 'liquid-glass-pill text-slate-400 hover:text-white'
                   }`}
                 >
                   {lang.name}
@@ -174,17 +180,17 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
         </div>
       )}
 
-      {/* Main Bar */}
-      <div className="flex items-center gap-2.5 p-2 bg-slate-900/90 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl">
+      {/* Main Floating Liquid Glass Dock */}
+      <div className="flex items-center gap-2.5 p-2 liquid-glass rounded-3xl shadow-2xl backdrop-blur-3xl transition-all">
         {/* Voice effect & Settings Trigger Button */}
         <button
           onClick={() => setShowFilterMenu(!showFilterMenu)}
           disabled={isRecording}
           title="Ovoz effektlari va til"
-          className={`p-2.5 rounded-xl border transition-all ${
+          className={`p-2.5 rounded-2xl border transition-all ${
             selectedFilter !== 'normal'
-              ? 'bg-violet-500/20 border-violet-500/50 text-violet-300'
-              : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:bg-white/10'
+              ? 'bg-violet-500/25 border-violet-400/50 text-violet-200 shadow-lg shadow-violet-500/20'
+              : 'liquid-glass-pill text-slate-400 hover:text-white'
           }`}
         >
           <Wand2 className="w-4 h-4" />
@@ -198,12 +204,12 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
               className="flex-1 px-3 py-2 text-slate-400 text-sm flex items-center justify-between cursor-pointer group"
             >
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="text-slate-300 group-hover:text-white transition-colors">
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                <span className="text-slate-300 group-hover:text-white transition-colors font-medium">
                   Ovozli habar yozish uchun bosing...
                 </span>
               </div>
-              <span className="text-[11px] text-slate-500 bg-black/30 px-2 py-0.5 rounded border border-white/5">
+              <span className="text-[11px] text-slate-400 bg-white/5 px-2.5 py-0.5 rounded-full border border-white/10 hidden sm:inline-block">
                 {selectedFilter !== 'normal' ? `Filtr: ${selectedFilter}` : "Nutq-matn yoqilgan"}
               </span>
             </div>
@@ -212,7 +218,7 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
               onClick={startRecording}
               disabled={disabled || isProcessing}
               title="Ovoz yozishni boshlash"
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-violet-600/30 transition-all active:scale-95 shrink-0"
+              className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:opacity-95 text-white font-semibold text-sm flex items-center gap-2 shadow-xl shadow-violet-600/30 transition-all active:scale-95 shrink-0 border border-white/25"
             >
               <Mic className="w-4 h-4" />
               <span>Yozish</span>
@@ -225,7 +231,7 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
             <button
               onClick={handleCancel}
               title="Bekor qilish"
-              className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all shrink-0"
+              className="p-2.5 rounded-2xl bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 transition-all shrink-0"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -248,9 +254,9 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
               onClick={handleStopAndSend}
               disabled={isProcessing}
               title="Yuborish"
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-white font-semibold text-sm flex items-center gap-1.5 shadow-lg shadow-emerald-500/30 transition-all active:scale-95 shrink-0"
+              className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-cyan-400 hover:opacity-95 text-slate-950 font-bold text-sm flex items-center gap-1.5 shadow-xl shadow-emerald-500/30 transition-all active:scale-95 shrink-0 border border-white/30"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4 fill-slate-950" />
               <span className="hidden sm:inline">Yuborish</span>
             </button>
           </>
@@ -259,9 +265,9 @@ export const VoiceRecorderDock: React.FC<VoiceRecorderDockProps> = ({ onSendVoic
 
       {/* Live transcription balloon during recording */}
       {isRecording && liveTranscript && (
-        <div className="mt-2 p-2 bg-slate-900/95 border border-cyan-500/30 rounded-xl text-xs text-cyan-200 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+        <div className="mt-2.5 p-2.5 liquid-glass rounded-2xl text-xs text-cyan-200 flex items-center gap-2 animate-in fade-in slide-in-from-top-1 border border-cyan-400/30">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0 animate-spin" />
-          <span className="italic truncate">"{liveTranscript}"</span>
+          <span className="italic truncate font-medium">"{liveTranscript}"</span>
         </div>
       )}
     </div>
